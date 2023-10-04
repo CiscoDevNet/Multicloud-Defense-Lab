@@ -1,1 +1,0 @@
-# Multicloud-Defense-Lab
