@@ -26,8 +26,8 @@ resource "google_project_service" "service" {
 ##################################################################################################################################
 
 resource "google_service_account" "sa" {
-  account_id   = "pod${var.pod_number}-mcd-service-account"
-  display_name = "pod${var.pod_number}-mcd-service-account"
+  account_id   = "pod${var.pod_number}-service-account"
+  display_name = "pod${var.pod_number}-service-account"
 }
 
 #############################################
@@ -71,13 +71,13 @@ resource "tls_private_key" "key_pair" {
 
 resource "local_file" "private_key" {
   content         = tls_private_key.key_pair.private_key_openssh
-  filename        = "pod${var.pod_number}-mcd-private-key"
+  filename        = "pod${var.pod_number}-private-key"
   file_permission = 0700
 }
 
 resource "local_file" "public_key" {
   content         = tls_private_key.key_pair.public_key_openssh
-  filename        = "pod${var.pod_number}-mcd-public-key"
+  filename        = "pod${var.pod_number}-public-key"
   file_permission = 0700
 }
 
@@ -228,11 +228,11 @@ output "app2-private-ip" {
 
 
 output "Command_to_use_for_ssh_into_app1_vm" {
-  value = "ssh -i pod${var.pod_number}-mcd-private-key ubuntu@${google_compute_instance.application[0].network_interface[0].access_config[0].nat_ip}"
+  value = "ssh -i pod${var.pod_number}-private-key ubuntu@${google_compute_instance.application[0].network_interface[0].access_config[0].nat_ip}"
 }
 
 output "Command_to_use_for_ssh_into_app2_vm" {
-  value = "ssh -i pod${var.pod_number}-mcd-private-key ubuntu@${google_compute_instance.application[1].network_interface[0].access_config[0].nat_ip}"
+  value = "ssh -i pod${var.pod_number}-private-key ubuntu@${google_compute_instance.application[1].network_interface[0].access_config[0].nat_ip}"
 }
 
 output "http_command_app1" {
