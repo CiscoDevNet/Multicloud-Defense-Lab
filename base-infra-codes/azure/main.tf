@@ -58,18 +58,18 @@ resource "tls_private_key" "key_pair" {
 
 resource "local_file" "private_key" {
   content         = tls_private_key.key_pair.private_key_openssh
-  filename        = "pod${var.pod_number}-mcd-private-key"
+  filename        = "pod${var.pod_number}-private-key"
   file_permission = 0700
 }
 
 resource "local_file" "public_key" {
   content         = tls_private_key.key_pair.public_key_openssh
-  filename        = "pod${var.pod_number}-mcd-public-key"
+  filename        = "pod${var.pod_number}-public-key"
   file_permission = 0700
 }
 
 resource "azurerm_ssh_public_key" "rg1-keypair" {
-  name                = "pod${var.pod_number}-ssh-keypair"
+  name                = "pod${var.pod_number}-keypair"
   resource_group_name = azurerm_resource_group.app-rg[0].name
   location            = var.location
   public_key          = tls_private_key.key_pair.public_key_openssh
@@ -261,11 +261,11 @@ output "app2-private-ip" {
 }
 
 output "Command_to_use_for_ssh_into_app1_vm" {
-  value = "ssh -i pod${var.pod_number}-mcd-private-key ubuntu@${azurerm_public_ip.app-ip[0].ip_address}"
+  value = "ssh -i pod${var.pod_number}-private-key ubuntu@${azurerm_public_ip.app-ip[0].ip_address}"
 }
 
 output "Command_to_use_for_ssh_into_app2_vm" {
-  value = "ssh -i pod${var.pod_number}-mcd-private-key ubuntu@${azurerm_public_ip.app-ip[1].ip_address}"
+  value = "ssh -i pod${var.pod_number}-private-key ubuntu@${azurerm_public_ip.app-ip[1].ip_address}"
 }
 
 output "http_command_app1" {

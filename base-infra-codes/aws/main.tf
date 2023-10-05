@@ -58,18 +58,18 @@ resource "tls_private_key" "key_pair" {
 
 resource "local_file" "private_key" {
   content         = tls_private_key.key_pair.private_key_openssh
-  filename        = "pod${var.pod_number}-mcd-private-key"
+  filename        = "pod${var.pod_number}-private-key"
   file_permission = 0700
 }
 
 resource "local_file" "public_key" {
   content         = tls_private_key.key_pair.public_key_openssh
-  filename        = "pod${var.pod_number}-mcd-public-key"
+  filename        = "pod${var.pod_number}-public-key"
   file_permission = 0700
 }
 
 resource "aws_key_pair" "sshkeypair" {
-  key_name   = "pod${var.pod_number}-mcd-keypair"
+  key_name   = "pod${var.pod_number}-keypair"
   public_key = tls_private_key.key_pair.public_key_openssh
 }
 
@@ -81,7 +81,7 @@ resource "aws_instance" "AppMachines" {
   count         = 2
   ami           = "ami-053b0d53c279acc90"
   instance_type = "t2.micro"
-  key_name      = "pod${var.pod_number}-mcd-keypair"
+  key_name      = "pod${var.pod_number}-keypair"
   user_data     = count.index == 0 ? data.template_file.application1_install.rendered : data.template_file.application2_install.rendered
 
   network_interface {
@@ -250,11 +250,11 @@ output "app2-private-ip" {
 }
 
 output "Command_to_use_for_ssh_into_app1_vm" {
-  value = "ssh -i pod${var.pod_number}-mcd-private-key ubuntu@${aws_eip.app-EIP[0].public_ip}"
+  value = "ssh -i pod${var.pod_number}-private-key ubuntu@${aws_eip.app-EIP[0].public_ip}"
 }
 
 output "Command_to_use_for_ssh_into_app2_vm" {
-  value = "ssh -i pod${var.pod_number}-mcd-private-key ubuntu@${aws_eip.app-EIP[1].public_ip}"
+  value = "ssh -i pod${var.pod_number}-private-key ubuntu@${aws_eip.app-EIP[1].public_ip}"
 }
 
 output "http_command_app1" {
