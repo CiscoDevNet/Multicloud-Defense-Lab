@@ -9,6 +9,12 @@ resource "azurerm_resource_group" "app-rg" {
   location = var.location
 }
 
+resource "azurerm_resource_group" "podx-rg" {
+  name     = "pod${var.pod_number}-rg"
+  location = var.location
+}
+
+
 #########################################################################################################################
 # Virtual Network and Subnet Creation
 #########################################################################################################################
@@ -40,9 +46,29 @@ resource "azurerm_route_table" "app_rt" {
   resource_group_name = azurerm_resource_group.app-rg["${count.index}"].name
 }
 
+resource "azurerm_route" "dcloud-subnet1" {
+  count=2
+  depends_on     = [azurerm_route_table.app_rt]
+  name                = "dcloud-subnet-route1"
+  resource_group_name = azurerm_resource_group.app-rg[count.index].name
+  route_table_name    = azurerm_route_table.app_rt[count.index].name
+  address_prefix      = "64.100.0.0/24"
+  next_hop_type       = "Internet"
+}
+
+resource "azurerm_route" "dcloud-subnet2" {
+  count=2
+  depends_on     = [azurerm_route_table.app_rt]
+  name                = "dcloud-subnet-route2"
+  resource_group_name = azurerm_resource_group.app-rg[count.index].name
+  route_table_name    = azurerm_route_table.app_rt[count.index].name
+  address_prefix      = "192.133.0.0/24"
+  next_hop_type       = "Internet"
+}
+
 resource "azurerm_subnet_route_table_association" "app_rta" {
   count          = 2
-  depends_on     = [azurerm_route_table.app_rt, azurerm_subnet.app-subnet]
+  depends_on     = [azurerm_route_table.app_rt, azurerm_subnet.app-subnet, azurerm_route.dcloud-subnet1,azurerm_route.dcloud-subnet2]
   subnet_id      = azurerm_subnet.app-subnet["${count.index}"].id
   route_table_id = azurerm_route_table.app_rt["${count.index}"].id
 }
@@ -70,7 +96,7 @@ resource "local_file" "public_key" {
 
 resource "azurerm_ssh_public_key" "rg1-keypair" {
   name                = "pod${var.pod_number}-keypair"
-  resource_group_name = azurerm_resource_group.app-rg[0].name
+  resource_group_name = azurerm_resource_group.podx-rg.name
   location            = var.location
   public_key          = tls_private_key.key_pair.public_key_openssh
 }

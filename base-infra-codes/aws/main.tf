@@ -223,6 +223,20 @@ resource "aws_route" "ext_default_route" {
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
+resource "aws_route" "dcloud-subnet1" {
+  count                  = 2
+  route_table_id         = aws_route_table.app-route["${count.index}"].id
+  destination_cidr_block = "64.100.0.0/16"
+  gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
+}
+
+resource "aws_route" "dcloud-subnet2" {
+  count                  = 2
+  route_table_id         = aws_route_table.app-route["${count.index}"].id
+  destination_cidr_block = "192.133.0.0/16"
+  gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
+}
+
 resource "aws_route_table_association" "app_association" {
   count          = 2
   subnet_id      = aws_subnet.app_subnet["${count.index}"].id
