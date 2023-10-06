@@ -220,11 +220,11 @@ resource "azurerm_network_interface_security_group_association" "app-nsg" {
 ################################################################################################################################
 
 data "template_file" "application1_install" {
-  template = file("${path.module}/application1_install.tpl")
+  template = file("${path.module}/application1_install.sh")
 }
 
 data "template_file" "application2_install" {
-  template = file("${path.module}/application2_install.tpl")
+  template = file("${path.module}/application2_install.sh")
 }
 
 ################################################################################################################################
