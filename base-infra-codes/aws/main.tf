@@ -47,6 +47,14 @@ resource "aws_subnet" "app_subnet" {
   }
 }
 
+resource "aws_subnet" "mgmt_subnet" {
+  vpc_id     = aws_vpc.app_vpc[0].id
+  cidr_block = "10.${var.pod_number}.200.0/24"
+  tags = {
+    Name = "pod${var.pod_number}-mgmt-subnet"
+  }
+}
+
 #################################################################################################################################
 # Keypair
 #################################################################################################################################
@@ -241,6 +249,26 @@ resource "aws_route_table_association" "app_association" {
   count          = 2
   subnet_id      = aws_subnet.app_subnet["${count.index}"].id
   route_table_id = aws_route_table.app-route["${count.index}"].id
+}
+
+##### Mgmt RouteTable
+
+resource "aws_route_table" "mgmt-route" {
+  vpc_id = aws_vpc.app_vpc[0].id
+  tags = {
+    Name = "pod${var.pod_number}-app1-mgmt-rt"
+  }
+}
+
+resource "aws_route" "mgmt_default_route" {
+  route_table_id         = aws_route_table.mgmt-route.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.int_gw[0].id
+}
+
+resource "aws_route_table_association" "mgmtRT_association" {
+  subnet_id      = aws_subnet.mgmt_subnet.id
+  route_table_id = aws_route_table.mgmt-route.id
 }
 
 ##################################################################################################################################
