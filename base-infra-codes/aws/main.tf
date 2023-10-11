@@ -234,14 +234,14 @@ resource "aws_route" "ext_default_route" {
 resource "aws_route" "dcloud-subnet1" {
   count                  = 2
   route_table_id         = aws_route_table.app-route["${count.index}"].id
-  destination_cidr_block = "64.100.0.0/16"
+  destination_cidr_block = "64.100.0.0/14"
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
 resource "aws_route" "dcloud-subnet2" {
   count                  = 2
   route_table_id         = aws_route_table.app-route["${count.index}"].id
-  destination_cidr_block = "192.133.0.0/16"
+  destination_cidr_block = "192.133.0.0/14"
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
