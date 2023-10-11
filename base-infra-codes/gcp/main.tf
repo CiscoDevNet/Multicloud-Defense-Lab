@@ -88,7 +88,7 @@ resource "local_file" "public_key" {
 resource "google_compute_route" "dcloud-subnet-route1" {
   count=2
   name        = "pod${var.pod_number}-dcloud-subnet1-route${count.index+1}"
-  dest_range  = "64.100.0.0/14"
+  dest_range  = "64.100.0.0/16"
   network     = google_compute_network.network[count.index].name
   next_hop_gateway = "default-internet-gateway"
   priority    = 100
@@ -97,7 +97,7 @@ resource "google_compute_route" "dcloud-subnet-route1" {
 resource "google_compute_route" "dcloud-subnet-route2" {
   count=2
   name        = "pod${var.pod_number}-dcloud-subnet2-route${count.index+1}"
-  dest_range  = "192.133.0.0/14"
+  dest_range  = "192.133.0.0/16"
   network     = google_compute_network.network[count.index].name
   next_hop_gateway = "default-internet-gateway"
   priority    = 101

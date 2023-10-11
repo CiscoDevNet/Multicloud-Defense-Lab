@@ -52,7 +52,7 @@ resource "azurerm_route" "dcloud-subnet1" {
   name                = "pod${var.pod_number}-dcloud-subnet-route1"
   resource_group_name = azurerm_resource_group.app-rg[count.index].name
   route_table_name    = azurerm_route_table.app_rt[count.index].name
-  address_prefix      = "64.100.0.0/14"
+  address_prefix      = "64.100.0.0/16"
   next_hop_type       = "Internet"
 }
 
@@ -62,7 +62,7 @@ resource "azurerm_route" "dcloud-subnet2" {
   name                = "pod${var.pod_number}-dcloud-subnet-route2"
   resource_group_name = azurerm_resource_group.app-rg[count.index].name
   route_table_name    = azurerm_route_table.app_rt[count.index].name
-  address_prefix      = "192.133.0.0/14"
+  address_prefix      = "192.133.0.0/16"
   next_hop_type       = "Internet"
 }
 
