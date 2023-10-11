@@ -122,7 +122,7 @@ resource "google_compute_instance" "application" {
       size  = "20"
       type  = "pd-ssd"
       labels = {
-        Name = "pod${var.pod_number}-app${count.index + 1}"
+      name = "pod${var.pod_number}-app${count.index + 1}"
       }
     }
   }
