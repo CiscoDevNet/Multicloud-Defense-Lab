@@ -42,6 +42,7 @@ resource "aws_subnet" "app_subnet" {
   count      = 2
   vpc_id     = aws_vpc.app_vpc["${count.index}"].id
   cidr_block = count.index == 0 ? local.subnet_cidr1 : local.subnet_cidr2
+  availability_zone = "us-east-1d"
   tags = {
     Name = "pod${var.pod_number}-app${count.index + 1}-subnet"
   }
@@ -50,6 +51,7 @@ resource "aws_subnet" "app_subnet" {
 resource "aws_subnet" "mgmt_subnet" {
   vpc_id     = aws_vpc.app_vpc[0].id
   cidr_block = "10.${var.pod_number}.200.0/24"
+  availability_zone = "us-east-1d"
   tags = {
     Name = "pod${var.pod_number}-mgmt-subnet"
   }
