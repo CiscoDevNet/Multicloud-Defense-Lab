@@ -5,10 +5,4 @@ provider "aws" {
 }
 
 terraform {
-  backend "s3" {
-    bucket         = "mcd-state-files-do-not-delete"
-    key            = "aws-podx-terraform.tfstate" 
-    region         = "us-east-1" 
-    encrypt        = true
-  }
 }
