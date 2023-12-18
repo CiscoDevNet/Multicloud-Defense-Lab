@@ -127,7 +127,7 @@ resource "azurerm_linux_virtual_machine" "app" {
   source_image_reference {
     publisher = "Canonical"
     offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+    sku       = "18.04-LTS"
     version   = "latest"
   }
   custom_data = count.index == 0 ? base64encode(data.template_file.application1_install.rendered) : base64encode(data.template_file.application2_install.rendered)
