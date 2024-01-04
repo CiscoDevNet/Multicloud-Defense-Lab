@@ -39,9 +39,9 @@ resource "aws_vpc" "app_vpc" {
 }
 
 resource "aws_subnet" "app_subnet" {
-  count      = 2
-  vpc_id     = aws_vpc.app_vpc["${count.index}"].id
-  cidr_block = count.index == 0 ? local.subnet_cidr1 : local.subnet_cidr2
+  count             = 2
+  vpc_id            = aws_vpc.app_vpc["${count.index}"].id
+  cidr_block        = count.index == 0 ? local.subnet_cidr1 : local.subnet_cidr2
   availability_zone = "us-east-1a"
   tags = {
     Name = "pod${var.pod_number}-app${count.index + 1}-subnet"
@@ -49,8 +49,8 @@ resource "aws_subnet" "app_subnet" {
 }
 
 resource "aws_subnet" "mgmt_subnet" {
-  vpc_id     = aws_vpc.app_vpc[0].id
-  cidr_block = "10.${var.pod_number}.200.0/24"
+  vpc_id            = aws_vpc.app_vpc[0].id
+  cidr_block        = "10.${var.pod_number}.200.0/24"
   availability_zone = "us-east-1a"
   tags = {
     Name = "pod${var.pod_number}-mgmt-subnet"
@@ -138,6 +138,7 @@ resource "aws_instance" "AppMachines" {
 
   tags = {
     Name = "pod${var.pod_number}-app${count.index + 1}"
+    Role = count.index == 0 ? "prod" : "shared"
   }
 }
 
@@ -233,17 +234,17 @@ resource "aws_route" "ext_default_route" {
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
-resource "aws_route" "dcloud-subnet1" {
+resource "aws_route" "jumpbox1_route" {
   count                  = 2
   route_table_id         = aws_route_table.app-route["${count.index}"].id
-  destination_cidr_block = "64.100.0.0/16"
+  destination_cidr_block = "20.12.187.121/32"
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
-resource "aws_route" "dcloud-subnet2" {
+resource "aws_route" "jumpbox2_route" {
   count                  = 2
   route_table_id         = aws_route_table.app-route["${count.index}"].id
-  destination_cidr_block = "192.133.0.0/16"
+  destination_cidr_block = "52.9.113.154/32"
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
