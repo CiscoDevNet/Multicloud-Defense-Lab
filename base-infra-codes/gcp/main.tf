@@ -85,19 +85,19 @@ resource "local_file" "public_key" {
 # Routes
 #################################################################################################################################
 
-resource "google_compute_route" "dcloud-subnet-route1" {
+resource "google_compute_route" "jumpbox1_route" {
   count            = 2
-  name             = "pod${var.pod_number}-dcloud-subnet1-route${count.index + 1}"
-  dest_range       = "64.100.0.0/16"
+  name             = "pod${var.pod_number}-jumpbox1-route${count.index + 1}"
+  dest_range       = "20.12.187.121/32"
   network          = google_compute_network.network[count.index].name
   next_hop_gateway = "default-internet-gateway"
   priority         = 100
 }
 
-resource "google_compute_route" "dcloud-subnet-route2" {
+resource "google_compute_route" "jumpbox2_route" {
   count            = 2
-  name             = "pod${var.pod_number}-dcloud-subnet2-route${count.index + 1}"
-  dest_range       = "192.133.0.0/16"
+  name             = "pod${var.pod_number}-jumpbox2-route${count.index + 1}"
+  dest_range       = "52.9.113.154/32"
   network          = google_compute_network.network[count.index].name
   next_hop_gateway = "default-internet-gateway"
   priority         = 101
@@ -117,6 +117,7 @@ resource "google_compute_instance" "application" {
   can_ip_forward = true
   labels = {
     name = "pod${var.pod_number}-app${count.index + 1}"
+    role = count.index == 0 ? "prod" : "shared"
   }
   boot_disk {
     initialize_params {
@@ -143,7 +144,8 @@ resource "google_compute_instance" "application" {
     email  = google_service_account.sa.email
     scopes = ["cloud-platform"]
   }
-  tags = ["pod${var.pod_number}-app${count.index + 1}"]
+  tags = ["pod${var.pod_number}-app${count.index + 1}", count.index == 0 ? "prod" : "shared"]
+
 }
 
 resource "null_resource" "name" {
@@ -226,7 +228,7 @@ resource "google_compute_firewall" "allow-ssh-bastion" {
     ports    = ["22", "80", "443"]
   }
 
-  source_ranges           = ["20.12.187.121/32","52.9.113.154/32","10.0.0.0/8", "35.0.0.0/8", "35.235.240.0/20", "172.16.0.0/12", "72.163.0.0/16", "192.133.192.0/19", "64.100.0.0/14", "64.100.10.0/23", "64.100.12.0/24", "64.100.13.0/24", "192.133.192.0/23", "192.133.202.0/24", "64.100.255.0/25", "128.107.222.0/24", "128.107.219.0/24", "128.107.220.0/24", "128.107.221.0/24", "128.107.93.0/24", "192.168.0.0/16"]
+  source_ranges           = ["20.12.187.121/32", "52.9.113.154/32", "10.0.0.0/8", "35.0.0.0/8", "35.235.240.0/20", "172.16.0.0/12", "72.163.0.0/16", "192.133.192.0/19", "64.100.0.0/14", "64.100.10.0/23", "64.100.12.0/24", "64.100.13.0/24", "192.133.192.0/23", "192.133.202.0/24", "64.100.255.0/25", "128.107.222.0/24", "128.107.219.0/24", "128.107.220.0/24", "128.107.221.0/24", "128.107.93.0/24", "192.168.0.0/16"]
   target_service_accounts = [google_service_account.sa.email]
 }
 

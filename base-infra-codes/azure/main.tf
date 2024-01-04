@@ -46,29 +46,29 @@ resource "azurerm_route_table" "app_rt" {
   resource_group_name = azurerm_resource_group.app-rg["${count.index}"].name
 }
 
-resource "azurerm_route" "dcloud-subnet1" {
-  count=2
-  depends_on     = [azurerm_route_table.app_rt]
-  name                = "pod${var.pod_number}-dcloud-subnet-route1"
+resource "azurerm_route" "jumpbox1_route" {
+  count               = 2
+  depends_on          = [azurerm_route_table.app_rt]
+  name                = "pod${var.pod_number}-jumpbox1-route"
   resource_group_name = azurerm_resource_group.app-rg[count.index].name
   route_table_name    = azurerm_route_table.app_rt[count.index].name
-  address_prefix      = "64.100.0.0/16"
+  address_prefix      = "20.12.187.121/32"
   next_hop_type       = "Internet"
 }
 
-resource "azurerm_route" "dcloud-subnet2" {
-  count=2
-  depends_on     = [azurerm_route_table.app_rt]
-  name                = "pod${var.pod_number}-dcloud-subnet-route2"
+resource "azurerm_route" "jumpbox2_route" {
+  count               = 2
+  depends_on          = [azurerm_route_table.app_rt]
+  name                = "pod${var.pod_number}-jumpbox2-route"
   resource_group_name = azurerm_resource_group.app-rg[count.index].name
   route_table_name    = azurerm_route_table.app_rt[count.index].name
-  address_prefix      = "192.133.0.0/16"
+  address_prefix      = "52.9.113.154/32"
   next_hop_type       = "Internet"
 }
 
 resource "azurerm_subnet_route_table_association" "app_rta" {
   count          = 2
-  depends_on     = [azurerm_route_table.app_rt, azurerm_subnet.app-subnet, azurerm_route.dcloud-subnet1,azurerm_route.dcloud-subnet2]
+  depends_on     = [azurerm_route_table.app_rt, azurerm_subnet.app-subnet, azurerm_route.jumpbox1_route, azurerm_route.jumpbox2_route]
   subnet_id      = azurerm_subnet.app-subnet["${count.index}"].id
   route_table_id = azurerm_route_table.app_rt["${count.index}"].id
 }
@@ -169,6 +169,7 @@ resource "azurerm_linux_virtual_machine" "app" {
   }
   tags = {
     Name = "pod${var.pod_number}-app${count.index + 1}"
+    Role = count.index == 0 ? "prod" : "shared"
   }
 }
 
