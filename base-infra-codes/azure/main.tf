@@ -169,7 +169,7 @@ resource "azurerm_linux_virtual_machine" "app" {
   }
   tags = {
     Name = "pod${var.pod_number}-app${count.index + 1}"
-    Role = count.index == 0 ? "prod" : "shared"
+    role = count.index == 0 ? "prod" : "shared"
   }
 }
 
