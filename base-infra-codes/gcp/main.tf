@@ -117,7 +117,7 @@ resource "google_compute_instance" "application" {
   can_ip_forward = true
   labels = {
     name = "pod${var.pod_number}-app${count.index + 1}"
-    role = count.index == 0 ? "prod" : "shared"
+    role = count.index == 0 ? "pod${var.pod_number}-prod" : "pod${var.pod_number}-shared"
   }
   boot_disk {
     initialize_params {
