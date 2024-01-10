@@ -138,7 +138,7 @@ resource "aws_instance" "AppMachines" {
 
   tags = {
     Name = "pod${var.pod_number}-app${count.index + 1}"
-    role = count.index == 0 ? "prod" : "shared"
+    role = count.index == 0 ? "pod${var.pod_number}-prod" : "pod${var.pod_number}-shared"
   }
 }
 
