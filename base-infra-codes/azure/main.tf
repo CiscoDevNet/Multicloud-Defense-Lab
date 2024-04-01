@@ -68,7 +68,7 @@ resource "azurerm_route" "jumpbox1_route" {
 
 resource "azurerm_subnet_route_table_association" "app_rta" {
   count          = 2
-  depends_on     = [azurerm_route_table.app_rt, azurerm_subnet.app-subnet, azurerm_route.jumpbox1_route, azurerm_route.jumpbox2_route]
+  depends_on     = [azurerm_route_table.app_rt, azurerm_subnet.app-subnet, azurerm_route.jumpbox1_route]
   subnet_id      = azurerm_subnet.app-subnet["${count.index}"].id
   route_table_id = azurerm_route_table.app_rt["${count.index}"].id
 }
