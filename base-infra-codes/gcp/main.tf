@@ -94,14 +94,14 @@ resource "google_compute_route" "jumpbox1_route" {
   priority         = 100
 }
 
-# resource "google_compute_route" "jumpbox2_route" {
-#   count            = 2
-#   name             = "pod${var.pod_number}-jumpbox2-route${count.index + 1}"
-#   dest_range       = "52.9.113.154/32"
-#   network          = google_compute_network.network[count.index].name
-#   next_hop_gateway = "default-internet-gateway"
-#   priority         = 101
-# }
+ resource "google_compute_route" "jumpbox2_route" {
+   count            = 2
+   name             = "pod${var.pod_number}-jumpbox2-route${count.index + 1}"
+   dest_range       = "35.84.104.14/32"
+   network          = google_compute_network.network[count.index].name
+   next_hop_gateway = "default-internet-gateway"
+   priority         = 101
+ }
 
 #################################################################################################################################
 # Instances
