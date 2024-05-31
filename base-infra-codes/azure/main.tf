@@ -56,15 +56,15 @@ resource "azurerm_route" "jumpbox1_route" {
   next_hop_type       = "Internet"
 }
 
-# resource "azurerm_route" "jumpbox2_route" {
-#   count               = 2
-#   depends_on          = [azurerm_route_table.app_rt]
-#   name                = "pod${var.pod_number}-jumpbox2-route"
-#   resource_group_name = azurerm_resource_group.app-rg[count.index].name
-#   route_table_name    = azurerm_route_table.app_rt[count.index].name
-#   address_prefix      = "52.9.113.154/32"
-#   next_hop_type       = "Internet"
-# }
+ resource "azurerm_route" "jumpbox2_route" {
+   count               = 2
+   depends_on          = [azurerm_route_table.app_rt]
+   name                = "pod${var.pod_number}-jumpbox2-route"
+   resource_group_name = azurerm_resource_group.app-rg[count.index].name
+   route_table_name    = azurerm_route_table.app_rt[count.index].name
+   address_prefix      = "35.84.104.14/32"
+   next_hop_type       = "Internet"
+ }
 
 resource "azurerm_subnet_route_table_association" "app_rta" {
   count          = 2
