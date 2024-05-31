@@ -241,12 +241,12 @@ resource "aws_route" "jumpbox1_route" {
   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
 }
 
-# resource "aws_route" "jumpbox2_route" {
-#   count                  = 2
-#   route_table_id         = aws_route_table.app-route["${count.index}"].id
-#   destination_cidr_block = "52.9.113.154/32"
-#   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
-# }
+ resource "aws_route" "jumpbox2_route" {
+   count                  = 2
+   route_table_id         = aws_route_table.app-route["${count.index}"].id
+   destination_cidr_block = "35.84.104.14/32"
+   gateway_id             = aws_internet_gateway.int_gw["${count.index}"].id
+ }
 
 resource "aws_route_table_association" "app_association" {
   count          = 2
