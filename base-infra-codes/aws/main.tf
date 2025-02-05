@@ -256,23 +256,23 @@ resource "aws_route_table_association" "app_association" {
 
 ##### Mgmt RouteTable
 
-resource "aws_route_table" "mgmt-route" {
-  vpc_id = aws_vpc.app_vpc[0].id
-  tags = {
-    Name = "pod${var.pod_number}-app1-mgmt-rt"
-  }
-}
+# resource "aws_route_table" "mgmt-route" {
+#   vpc_id = aws_vpc.app_vpc[0].id
+#   tags = {
+#     Name = "pod${var.pod_number}-app1-mgmt-rt"
+#   }
+# }
 
-resource "aws_route" "mgmt_default_route" {
-  route_table_id         = aws_route_table.mgmt-route.id
-  destination_cidr_block = "0.0.0.0/0"
-  gateway_id             = aws_internet_gateway.int_gw[0].id
-}
+# resource "aws_route" "mgmt_default_route" {
+#   route_table_id         = aws_route_table.mgmt-route.id
+#   destination_cidr_block = "0.0.0.0/0"
+#   gateway_id             = aws_internet_gateway.int_gw[0].id
+# }
 
-resource "aws_route_table_association" "mgmtRT_association" {
-  subnet_id      = aws_subnet.mgmt_subnet.id
-  route_table_id = aws_route_table.mgmt-route.id
-}
+# resource "aws_route_table_association" "mgmtRT_association" {
+#   subnet_id      = aws_subnet.mgmt_subnet.id
+#   route_table_id = aws_route_table.mgmt-route.id
+# }
 
 resource "aws_ec2_transit_gateway" "tgw" {
   description = "Transit Gateway"
