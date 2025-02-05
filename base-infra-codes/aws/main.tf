@@ -196,7 +196,7 @@ resource "aws_security_group" "allow_all" {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = ["0.0.0.0/0", "68.154.48.186/32","10.0.0.0/8","192.0.0.0/8"]
   }
   egress {
     from_port   = 0
@@ -274,6 +274,16 @@ resource "aws_route_table_association" "mgmtRT_association" {
   route_table_id = aws_route_table.mgmt-route.id
 }
 
+resource "aws_ec2_transit_gateway" "tgw" {
+  description = "Transit Gateway"
+  auto_accept_shared_attachments = "enable"
+  default_route_table_association = "disable"
+  default_route_table_propagation = "disable"
+  tags = {
+    Name = "pod${var.pod_number}-tgw"
+  }
+}
+
 ##################################################################################################################################
 # Outputs
 ##################################################################################################################################
@@ -309,5 +319,4 @@ output "http_command_app1" {
 output "http_command_app2" {
   value = "http://${aws_eip.app-EIP[1].public_ip}"
 }
-
 
