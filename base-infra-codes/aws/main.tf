@@ -274,16 +274,6 @@ resource "aws_route_table_association" "app_association" {
 #   route_table_id = aws_route_table.mgmt-route.id
 # }
 
-resource "aws_ec2_transit_gateway" "tgw" {
-  description = "Transit Gateway"
-  auto_accept_shared_attachments = "enable"
-  default_route_table_association = "disable"
-  default_route_table_propagation = "disable"
-  tags = {
-    Name = "pod${var.pod_number}-tgw"
-  }
-}
-
 ##################################################################################################################################
 # Outputs
 ##################################################################################################################################
