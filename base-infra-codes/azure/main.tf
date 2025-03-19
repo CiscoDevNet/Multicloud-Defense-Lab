@@ -191,7 +191,7 @@ resource "azurerm_network_security_group" "allow-all" {
     protocol                   = "*"
     source_port_range          = "*"
     destination_port_range     = "*"
-    source_address_prefix      = "*"
+    source_address_prefixes      = ["68.154.48.186/32","10.0.0.0/8","192.0.0.0/8"]
     destination_address_prefix = "*"
   }
   security_rule {
